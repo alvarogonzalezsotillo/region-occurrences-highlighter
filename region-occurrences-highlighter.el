@@ -34,11 +34,7 @@
 
 
 (defface region-occurrences-highlighter--face
-  '((((min-colors 88) (background dark))
-     (:background "yellow1" :foreground "black"))
-    (((background dark)) (:background "yellow" :foreground "black"))
-    (((min-colors 88)) (:background "yellow1"))
-    (t (:background "yellow")))
+  '((t (:inverse-video t)))'
   "Face for occurrences of current region."
   :group 'region-occurrences-highlighter--group)
 
