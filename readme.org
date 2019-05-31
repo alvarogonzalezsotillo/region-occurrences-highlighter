@@ -1,6 +1,6 @@
 
 
-This package implements a local minor mode that highlights occurrences of the current selected region. It uses the built-it =highlight-regexp= function.
+This emacs package implements a local minor mode that highlights occurrences of the current selected region. It uses the built-it =highlight-regexp= function.
 
 * Installation
 
