@@ -1,0 +1,29 @@
+
+
+This package implements a local minor mode that highlights occurrences of the current selected region. It uses the built-it =highlight-regexp= function.
+
+* Installation
+
+Add the file =region-occurrences-highlighter= to your =load-path=, require it, and enable it for each buffer with =alt-x= =region-occurences-highlighter-mode=.
+
+You can add a hook to enable it when oppening a buffer, as in the code below.
+
+#+begin_src emacs-lisp
+(require 'region-occurences-highlighter)
+
+(add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
+#+end_src
+
+
+It will be available through MELPA at some time in the future, as soon as I learn how to do it.
+
+
+* Customization
+These following are available in customize:
+- =region-occurrences-highlighter--face=: Face used to highlight the occurrences.
+- =region-occurrences-highlighter--min-size=: Minimum region length to highlight occurrences.
+- =region-occurrences-highlighter--max-size=: Maximum region length to highlight occurrences.
+
+* Possible improvements
+- A =post-command-hook= is used in order to detect all region changes, including mouse selections. This can lead to performance problems. Another option could be to hook point and mark changes.
+- The current behavior mimics other editors like VSCode, where the highlight takes place instantaneously. Some kind of delay could be implemented in order to improve performance 
