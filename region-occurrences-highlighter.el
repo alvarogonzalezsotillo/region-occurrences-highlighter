@@ -2,6 +2,8 @@
 
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
+;; Package-Requires: ((emacs "24"))
+;; Version: 1.0
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
