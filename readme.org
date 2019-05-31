@@ -2,6 +2,9 @@
 
 This emacs package implements a local minor mode that highlights occurrences of the current selected region. It uses the built-it =highlight-regexp= function.
 
+
+[[file:screencast.gif]]
+
 * Installation
 
 Add the file =region-occurrences-highlighter= to your =load-path=, require it, and enable it for each buffer with =alt-x= =region-occurences-highlighter-mode=.

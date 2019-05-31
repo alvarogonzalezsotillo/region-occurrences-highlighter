@@ -1,9 +1,23 @@
 ;;; package --- Summary
 
+;; Author: Álvaro González Sotillo
+;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
+;; Keywords: convenience, usability
+
+;; This file is not part of GNU Emacs.
+
 ;;; Commentary:
+
+;; This minor mode marks all the occurrences of the current region (selection)
+;;
+;; Quick start:
+;; Enable region-occurrences-highlighter-mode, via alt-X or using hooks
+;;
+;; More information at http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 
 ;;; Code:
 
+(require 'hi-lock)
 
 (defvar region-occurrences-highlighter--previous-region nil)
 (make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
