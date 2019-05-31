@@ -30,3 +30,8 @@ These following are available in customize:
 * Possible improvements
 - A =post-command-hook= is used in order to detect all region changes, including mouse selections. This can lead to performance problems. Another option could be to hook point and mark changes.
 - The current behavior mimics other editors like VSCode, where the highlight takes place instantaneously. Some kind of delay could be implemented in order to improve performance 
+
+
+* Similar solutions
+- [[https://github.com/YoungFrog/highlight-region/blob/master/highlight-region.el][YoungFrog/highlight-region]]
+- Question in [[https://emacs.stackexchange.com/questions/22041/highlight-text-equivalent-to-the-marked-region-and-search-and-replace-on-the-fly][StackExchange]]
