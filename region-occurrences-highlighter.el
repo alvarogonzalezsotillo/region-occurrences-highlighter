@@ -1,4 +1,4 @@
-;;; package --- Mark occurrences of current region (selection)  -*- lexical-binding: t; -*-
+;;; region-occurrences-highlighter.el --- Mark occurrences of current region (selection).  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo
 ;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
