@@ -1,10 +1,14 @@
-;;; package --- Summary
+;;; package --- Summary  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo
 ;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
-;; Keywords: convenience, usability
+;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
+
+;;; License:
+
+;; Licensed under the same terms as Emacs.
 
 ;;; Commentary:
 
@@ -23,7 +27,8 @@
 (make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
 
 (defgroup region-occurrences-highlighter--group nil
-  "Region occurrences highlighter.")
+  "Region occurrences highlighter."
+  :group 'convenience)
 
 
 (defface region-occurrences-highlighter--face
@@ -53,30 +58,30 @@
    (>= (abs (- begin end)) region-occurrences-highlighter--min-size)
    (<= (abs (- begin end)) region-occurrences-highlighter--max-size)))
 
-(defun region-occurrences-highlighter--change-hook ()
-  "Called each time the region is changed."
 
-  ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
-  (when region-occurrences-highlighter--previous-region
-    (unhighlight-regexp region-occurrences-highlighter--previous-region)
-    (setq region-occurrences-highlighter--previous-region nil))
-
-  (when region-occurrences-highlighter-mode 
-    
-
-    ;;; HIGHLIGHT THE CURRENT REGION
-    (when (region-active-p)
-      (let ((begin (region-beginning))
-            (end (region-end)))
-        (when (region-occurrences-highlighter--accept begin end)
-          (let ((str (regexp-quote (buffer-substring begin end))))
-            (setq region-occurrences-highlighter--previous-region str)
-            (highlight-regexp str 'region-occurrences-highlighter--face)))))))
-
-  ;;;###autoload
+ ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
   "Highlight the current region and its occurrences, a la Visual Code"
   :group region-occurrences-highlighter--group
+
+  (defun region-occurrences-highlighter--change-hook ()
+    "Called each time the region is changed."
+
+    ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
+    (when region-occurrences-highlighter--previous-region
+      (unhighlight-regexp region-occurrences-highlighter--previous-region)
+      (setq region-occurrences-highlighter--previous-region nil))
+
+    (when region-occurrences-highlighter-mode
+
+      ;;; HIGHLIGHT THE CURRENT REGION
+      (when (region-active-p)
+        (let ((begin (region-beginning))
+              (end (region-end)))
+          (when (region-occurrences-highlighter--accept begin end)
+            (let ((str (regexp-quote (buffer-substring begin end))))
+              (setq region-occurrences-highlighter--previous-region str)
+              (highlight-regexp str 'region-occurrences-highlighter--face)))))))
 
   (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook))
 
@@ -84,5 +89,3 @@
 (provide 'region-occurrences-highlighter)
 
 ;;; region-occurrences-highlighter ends here
-
-(add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
