@@ -85,6 +85,10 @@
 
   (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook))
 
+;;; I need to add a hook in the minormode body, and the hook needs to test if the mode is enabled
+;;; The problem: if the hook function is insde the minormode, I get a warning that the function may not be defined
+;;; But: if the hook function is outside the minormode, I get a warning that the mode variable may not be defined
+
 
 (provide 'region-occurrences-highlighter)
 
