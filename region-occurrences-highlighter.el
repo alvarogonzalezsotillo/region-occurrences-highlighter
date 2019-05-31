@@ -1,4 +1,4 @@
-;;; package --- Summary  -*- lexical-binding: t; -*-
+;;; package --- Mark occurrences of current region (selection)  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo
 ;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
@@ -86,10 +86,10 @@
   (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook))
 
 ;;; I need to add a hook in the minormode body, and the hook needs to test if the mode is enabled
-;;; The problem: if the hook function is insde the minormode, I get a warning that the function may not be defined
-;;; But: if the hook function is outside the minormode, I get a warning that the mode variable may not be defined
+;;; THE PROBLEM: if the hook function is insde the minormode, I get a warning that the function may not be defined
+;;; BUT: if the hook function is outside the minormode, I get a warning that the mode variable may not be defined
 
 
 (provide 'region-occurrences-highlighter)
 
-;;; region-occurrences-highlighter ends here
+;;; region-occurrences-highlighter.el ends here
