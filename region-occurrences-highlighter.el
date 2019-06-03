@@ -62,28 +62,30 @@
   "Highlight the current region and its occurrences, a la Visual Code"
   :group region-occurrences-highlighter--group
 
-  (defun region-occurrences-highlighter--change-hook ()
-    "Called each time the region is changed."
-
-    ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
-    (when region-occurrences-highlighter--previous-region
-      (unhighlight-regexp region-occurrences-highlighter--previous-region)
-      (setq region-occurrences-highlighter--previous-region nil))
-
-    (when region-occurrences-highlighter-mode
-
-      ;;; HIGHLIGHT THE CURRENT REGION
-      (when (region-active-p)
-        (let ((begin (region-beginning))
-              (end (region-end)))
-          (when (region-occurrences-highlighter--accept begin end)
-            (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
-              (setq region-occurrences-highlighter--previous-region str)
-              (highlight-regexp str 'region-occurrences-highlighter--face)))))))
 
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook)
   (when region-occurrences-highlighter-mode
     (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook)))
+
+(defun region-occurrences-highlighter--change-hook ()
+  "Called each time the region is changed."
+
+  ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
+  (when region-occurrences-highlighter--previous-region
+    (unhighlight-regexp region-occurrences-highlighter--previous-region)
+    (setq region-occurrences-highlighter--previous-region nil))
+
+  (when region-occurrences-highlighter-mode
+
+    ;;; HIGHLIGHT THE CURRENT REGION
+    (when (region-active-p)
+      (let ((begin (region-beginning))
+            (end (region-end)))
+        (when (region-occurrences-highlighter--accept begin end)
+          (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
+            (setq region-occurrences-highlighter--previous-region str)
+            (highlight-regexp str 'region-occurrences-highlighter--face)))))))
+
 
 ;;; I need to add a hook in the minormode body, and the hook needs to test if the mode is enabled
 ;;; THE PROBLEM: if the hook function is insde the minormode, I get a warning that the function may not be defined
