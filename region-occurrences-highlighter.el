@@ -87,10 +87,6 @@
             (highlight-regexp str 'region-occurrences-highlighter--face)))))))
 
 
-;;; I need to add a hook in the minormode body, and the hook needs to test if the mode is enabled
-;;; THE PROBLEM: if the hook function is insde the minormode, I get a warning that the function may not be defined
-;;; BUT: if the hook function is outside the minormode, I get a warning that the mode variable may not be defined
-
 
 (provide 'region-occurrences-highlighter)
 
