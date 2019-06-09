@@ -1,7 +1,7 @@
 ;;; region-occurrences-highlighter.el --- Mark occurrences of current region (selection).  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
-;; URL: http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
+;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
 ;; Version: 1.0
 ;; Keywords: convenience
@@ -10,7 +10,7 @@
 
 ;;; License:
 
-;; Licensed under the same terms as Emacs.
+;; GNU General Public License v3.0. See COPYING for details.
 
 ;;; Commentary:
 
@@ -19,7 +19,7 @@
 ;; Quick start:
 ;; Enable region-occurrences-highlighter-mode, via alt-X or using hooks
 ;;
-;; More information at http://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
+;; More information at https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 
 ;;; Code:
 
@@ -28,39 +28,36 @@
 (defvar region-occurrences-highlighter--previous-region nil)
 (make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
 
-(defgroup region-occurrences-highlighter--group nil
+(defgroup region-occurrences-highlighter-group nil
   "Region occurrences highlighter."
   :group 'convenience)
 
 
-(defface region-occurrences-highlighter--face
-  '((t (:inverse-video t)))'
-  "Face for occurrences of current region."
-  :group 'region-occurrences-highlighter--group)
+(defface region-occurrences-highlighter-face
+  '((t (:inverse-video t)))
+  "Face for occurrences of current region.")
 
 
-(defcustom region-occurrences-highlighter--max-size 300
+(defcustom region-occurrences-highlighter-max-size 300
   "Maximum length of region of which highlight occurrences."
-  :type 'integer
-  :group 'region-occurrences-highlighter--group)
+  :type 'integer)
 
-(defcustom region-occurrences-highlighter--min-size 3
+(defcustom region-occurrences-highlighter-min-size 3
   "Minimum length of region to highlight occurrences."
-  :type 'integer
-  :group 'region-occurrences-highlighter--group)
+  :type 'integer)
 
 (defun region-occurrences-highlighter--accept (begin end)
   "Accept to highlight occurrences if BEGIN and END are between limits."
   (and
    (not (eq begin end))
-   (>= (abs (- begin end)) region-occurrences-highlighter--min-size)
-   (<= (abs (- begin end)) region-occurrences-highlighter--max-size)))
+   (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
+   (<= (abs (- begin end)) region-occurrences-highlighter-max-size)))
 
 
- ;;;###autoload
+;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
   "Highlight the current region and its occurrences, a la Visual Code"
-  :group region-occurrences-highlighter--group
+  :group region-occurrences-highlighter-group
 
 
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook)
@@ -84,7 +81,7 @@
         (when (region-occurrences-highlighter--accept begin end)
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
             (setq region-occurrences-highlighter--previous-region str)
-            (highlight-regexp str 'region-occurrences-highlighter--face)))))))
+            (highlight-regexp str 'region-occurrences-highlighter-face)))))))
 
 
 
