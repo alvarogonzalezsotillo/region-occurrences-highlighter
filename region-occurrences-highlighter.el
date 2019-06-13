@@ -60,9 +60,9 @@
   :group region-occurrences-highlighter-group
 
 
-  (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook)
+  (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (when region-occurrences-highlighter-mode
-    (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook)))
+    (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)))
 
 (defun region-occurrences-highlighter--change-hook ()
   "Called each time the region is changed."
