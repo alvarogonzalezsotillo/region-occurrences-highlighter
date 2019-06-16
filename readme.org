@@ -23,9 +23,9 @@ It will be available through MELPA at some time in the future, as soon as I lear
 
 * Customization
 These following are available in customize:
-- =region-occurrences-highlighter--face=: Face used to highlight the occurrences. Defaults to inverse text.
-- =region-occurrences-highlighter--min-size=: Minimum region length to highlight occurrences. Defaults to =3=.
-- =region-occurrences-highlighter--max-size=: Maximum region length to highlight occurrences. Defaults to =300=.
+- =region-occurrences-highlighter-face=: Face used to highlight the occurrences. Defaults to inverse text.
+- =region-occurrences-highlighter-min-size=: Minimum region length to highlight occurrences. Defaults to =3=.
+- =region-occurrences-highlighter-max-size=: Maximum region length to highlight occurrences. Defaults to =300=.
 
 * Possible improvements
 - A =post-command-hook= is used in order to detect all region changes, including mouse selections. This can lead to performance problems. Another option could be to hook point and mark changes.
