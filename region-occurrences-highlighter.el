@@ -59,7 +59,6 @@
   "Highlight the current region and its occurrences, a la Visual Code"
   :group region-occurrences-highlighter-group
 
-
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (when region-occurrences-highlighter-mode
     (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)))
@@ -75,7 +74,8 @@
   (when region-occurrences-highlighter-mode
 
     ;;; HIGHLIGHT THE CURRENT REGION
-    (when (region-active-p)
+    (when (and (region-active-p)
+               (not deactivate-mark))
       (let ((begin (region-beginning))
             (end (region-end)))
         (when (region-occurrences-highlighter--accept begin end)
