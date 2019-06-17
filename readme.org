@@ -18,7 +18,7 @@ You can add a hook to enable it when oppening a buffer, as in the code below.
 (add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
 #+end_src
 
-Also, it is available on MELPA, and that is the preferred installation method.
+Also, it is [[https://melpa.org/#/region-occurrences-highlighter][available on MELPA]], and that is the preferred installation method.
 
 
 * Customization
