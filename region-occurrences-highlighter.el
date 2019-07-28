@@ -46,7 +46,7 @@
   "Minimum length of region to highlight occurrences."
   :type 'integer)
 
-(defcustom region-occurrences-highlighter-igore-blanks t
+(defcustom region-occurrences-highlighter-ignyore-blanks t
   "Ignore selection if contains whitespace only."
   :type 'boolean)
 
@@ -62,7 +62,7 @@
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
    (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
    (or
-    (not region-occurrences-highlighter-igore-blanks)
+    (not region-occurrences-highlighter-ignore-blanks)
     (let ((str (buffer-substring-no-properties begin end)))
      (not (region-occurrences-highlighter--blanks str))
    ))))
