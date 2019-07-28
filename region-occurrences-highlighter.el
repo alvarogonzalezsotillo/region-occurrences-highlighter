@@ -46,19 +46,26 @@
   "Minimum length of region to highlight occurrences."
   :type 'integer)
 
+(defcustom region-occurrences-highlighter-igore-blanks t
+  "Ignore selection if contains whitespace only."
+  :type 'boolean)
+
+
 (defun region-occurrences-highlighter--blanks (str)
   (string= ""
            (replace-regexp-in-string "[:space:]+" "" str)))
 
 (defun region-occurrences-highlighter--accept (begin end)
-  "Accept to highlight occurrences if BEGIN and END are between limits."
+  "Accept to highlight occurrences if BEGIN and END are between limits, and the selection contains non-blanks."
   (and
    (not (eq begin end))
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
    (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
-   (let ((str (buffer-substring-no-properties begin end)))
+   (or
+    (not region-occurrences-highlighter-igore-blanks)
+    (let ((str (buffer-substring-no-properties begin end)))
      (not (region-occurrences-highlighter--blanks str))
-   )))
+   ))))
 
 
 ;;;###autoload
