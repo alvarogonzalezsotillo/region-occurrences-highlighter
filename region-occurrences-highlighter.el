@@ -99,26 +99,4 @@
 
 
 (provide 'region-occurrences-highlighter)
-
-
-;;; Some tabs and spaces, to test region-occurrences-highlighter-ignore-regex. Visible with witespace-mode.
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-
-              
-              
-              
-              
-              
-              
-
-
 ;;; region-occurrences-highlighter.el ends here
