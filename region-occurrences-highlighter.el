@@ -3,7 +3,7 @@
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
-;; Version: 1.0
+;; Version: 1.2
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -20,6 +20,19 @@
 ;; Enable region-occurrences-highlighter-mode, via alt-X or using hooks
 ;;
 ;; More information at https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
+
+
+
+;;; News:
+;;
+;;;; Changes since v1.1:
+;;
+;; - Added `region-occurrences-highlighter-ignore-regex'
+;;
+;;;; Changes since v1.0:
+;; - Bug fixes
+
+
 
 ;;; Code:
 
