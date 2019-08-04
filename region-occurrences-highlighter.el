@@ -46,28 +46,27 @@
   "Minimum length of region to highlight occurrences."
   :type 'integer)
 
-(defcustom region-occurrences-highlighter-ignyore-blanks t
-  "Ignore selection if contains whitespace only."
-  :type 'boolean)
+(defcustom region-occurrences-highlighter-ignore-regex "[[:space:]\n]+"
+  "Ignore selection if matches this regex. Set it to empty string to maintaint compatibility with previous versions."
+  :type 'string)
+(defun region-occurrences-highlighter--ignore(str)
+  "Check if STR matches the ignore regex."
+  (or
+   (not region-occurrences-highlighter-ignore-regex)
+   (string=
+    ""
+    (replace-regexp-in-string region-occurrences-highlighter-ignore-regex "" str))))
 
-
-(defun region-occurrences-highlighter--blanks (str)
-  (string= ""
-           (replace-regexp-in-string "[:space:]+" "" str)))
 
 (defun region-occurrences-highlighter--accept (begin end)
-  "Accept to highlight occurrences if BEGIN and END are between limits, and the selection contains non-blanks."
+  "Accept to highlight occurrences if BEGIN and END are between limits, and the selection doesn't match ignore regex."
+(message "accept:")
   (and
    (not (eq begin end))
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
    (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
-   (or
-    (not region-occurrences-highlighter-ignore-blanks)
-    (let ((str (buffer-substring-no-properties begin end)))
-     (not (region-occurrences-highlighter--blanks str))
-   ))))
-
-
+   (let ((str (buffer-substring-no-properties begin end)))
+     (not (region-occurrences-highlighter--ignore str)))))
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
   "Highlight the current region and its occurrences, a la Visual Code"
@@ -100,5 +99,26 @@
 
 
 (provide 'region-occurrences-highlighter)
+
+
+;;; Some tabs and spaces, to test region-occurrences-highlighter-ignore-regex. Visible with witespace-mode.
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+
+              
+              
+              
+              
+              
+              
+
 
 ;;; region-occurrences-highlighter.el ends here
