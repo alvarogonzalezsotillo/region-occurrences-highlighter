@@ -73,7 +73,6 @@
 
 (defun region-occurrences-highlighter--accept (begin end)
   "Accept to highlight occurrences if BEGIN and END are between limits, and the selection doesn't match ignore regex."
-(message "accept:")
   (and
    (not (eq begin end))
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
