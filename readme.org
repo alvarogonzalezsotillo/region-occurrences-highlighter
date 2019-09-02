@@ -20,6 +20,14 @@ You can add a hook to enable it when oppening a buffer, as in the code below.
 
 Also, it is [[https://melpa.org/#/region-occurrences-highlighter][available on MELPA]], and that is the preferred installation method.
 
+In order to add keyboard navigation between highlighted regions, bind your preferred keys in the =region-occurrences-highlighter-nav-mode-map= keymap:
+
+#+begin_src emacs-lisp
+(define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
+(define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
+#+end_src
+
+The =region-occurrences-highlighter-nav-mode-map= map is only active when regions are highlighted, so the keys can have other bindings when no region highlights exist.
 
 * Customization
 These following are available in customize:

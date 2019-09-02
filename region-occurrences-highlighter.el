@@ -94,7 +94,8 @@
   ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
   (when region-occurrences-highlighter--previous-region
     (unhighlight-regexp region-occurrences-highlighter--previous-region)
-    (setq region-occurrences-highlighter--previous-region nil))
+    (setq region-occurrences-highlighter--previous-region nil)
+    (region-occurrences-highlighter-nav-mode -1))
 
   (when region-occurrences-highlighter-mode
 
@@ -106,9 +107,53 @@
         (when (region-occurrences-highlighter--accept begin end)
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
             (setq region-occurrences-highlighter--previous-region str)
-            (highlight-regexp str 'region-occurrences-highlighter-face)))))))
+            (highlight-regexp str 'region-occurrences-highlighter-face)
+            (region-occurrences-highlighter-nav-mode 1)))))))
 
+(defvar region-occurrences-highlighter-nav-mode-map
+  (make-sparse-keymap)
+  "Keymap for `region-occurrences-highlighter-nav-mode-map'.")
 
+(define-minor-mode region-occurrences-highlighter-nav-mode
+  "Navigate the highlighted regions.
+
+\\{region-occurrences-highlighter-nav-mode-map}")
+
+(defun region-occurrences-highlighter-next ()
+  "Jump to the next highlighted region."
+  (interactive)
+  (region-occurrences-highlighter-jump 1))
+
+(defun region-occurrences-highlighter-prev ()
+  "Jump to the previous highlighted region."
+  (interactive)
+  (region-occurrences-highlighter-jump -1))
+
+(defun region-occurrences-highlighter-jump (dir)
+  "Jump to the next or previous highlighted region.
+DIR has to be 1 or -1."
+  (if region-occurrences-highlighter--previous-region
+      ;; If the point is before the mark when going forward or vice
+      ;; versa, we need to exchange point and mark in order to not hit
+      ;; the current region when searching.
+      (let ((swap (if (< (point) (mark)) (eq dir 1) (eq dir -1)))
+            (case-fold-search nil))
+        (when swap
+          (exchange-point-and-mark))
+        (if (re-search-forward region-occurrences-highlighter--previous-region nil t dir)
+            (progn
+              (set-mark (point))
+              (re-search-backward region-occurrences-highlighter--previous-region nil t dir)
+              ;; Make sure that point and mark is in the same order as the
+              ;; original selection.
+              (when (not swap)
+                (exchange-point-and-mark))
+              (activate-mark))
+          (message "No more highlights")
+          ;; Undo the swap.
+          (when swap
+            (exchange-point-and-mark))))
+    (error "No region highlighted")))
 
 (provide 'region-occurrences-highlighter)
 ;;; region-occurrences-highlighter.el ends here
