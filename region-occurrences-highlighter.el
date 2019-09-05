@@ -60,7 +60,7 @@
   :type 'integer)
 
 (defcustom region-occurrences-highlighter-ignore-regex "[[:space:]\n]+"
-  "Ignore selection if matches this regex. Set it to empty string to maintaint compatibility with previous versions."
+  "Ignore selection if matches this regex.  Set it to empty string to maintain compatibility with previous versions."
   :type 'string)
 (defun region-occurrences-highlighter--ignore(str)
   "Check if STR matches the ignore regex."
