@@ -3,7 +3,7 @@
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
-;; Version: 1.2
+;; Version: 1.3
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -24,6 +24,10 @@
 
 
 ;;; News:
+;;
+;;;; Changes since v1.2:
+;;
+;; - Added `region-occurrences-highlighter-nav-mode' (thanks to Thomas Fini Hansen)
 ;;
 ;;;; Changes since v1.1:
 ;;
