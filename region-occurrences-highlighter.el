@@ -66,6 +66,7 @@
 (defcustom region-occurrences-highlighter-ignore-regex "[[:space:]\n]+"
   "Ignore selection if matches this regex.  Set it to empty string to maintain compatibility with previous versions."
   :type 'string)
+
 (defun region-occurrences-highlighter--ignore(str)
   "Check if STR matches the ignore regex."
   (or
@@ -83,6 +84,7 @@
    (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
    (let ((str (buffer-substring-no-properties begin end)))
      (not (region-occurrences-highlighter--ignore str)))))
+
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
   "Highlight the current region and its occurrences, a la Visual Code"
@@ -91,6 +93,15 @@
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (when region-occurrences-highlighter-mode
     (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)))
+
+(defun region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode ()
+  "Turn on the 'region-occurrences-highlighter-mode'."
+  (region-occurrences-highlighter-mode 1))
+
+;;;###autoload
+(define-globalized-minor-mode global-region-occurrences-highlighter-mode
+  region-occurrences-highlighter-mode region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode
+  :require 'region-occurrences-highlighter)
 
 (defun region-occurrences-highlighter--change-hook ()
   "Called each time the region is changed."
