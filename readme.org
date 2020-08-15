@@ -28,7 +28,7 @@ Also, it is [[https://melpa.org/#/region-occurrences-highlighter][available on M
   :config
   (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
   (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-  (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+  (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode))
 #+end_src
 
 * Navigation between occurrences
