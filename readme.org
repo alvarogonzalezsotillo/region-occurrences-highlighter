@@ -43,6 +43,7 @@ The =region-occurrences-highlighter-nav-mode-map= map is only active when region
 
 * Customization
 These following are available in customize:
+- =region-occurrences-highlighter-all-visible-buffers=: In non nil, occurrences are highlighted in the buffers of all visible windows and frames. Defaults to =t=.
 - =region-occurrences-highlighter-face=: Face used to highlight the occurrences. Defaults to inverse text.
 - =region-occurrences-highlighter-min-size=: Minimum region length to highlight occurrences. Defaults to =3=.
 - =region-occurrences-highlighter-max-size=: Maximum region length to highlight occurrences. Defaults to =300=.
