@@ -3,7 +3,7 @@
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
-;; Version: 1.3
+;; Version: 1.5
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -24,6 +24,14 @@
 
 
 ;;; News:
+;;
+;;;; Changes since v1.4:
+;;
+;; - Added `region-occurrences-highlighter-all-visible-buffers'
+;;
+;;;; Changes since v1.3:
+;;
+;; - Added global minor mode (thanks to Jen-Chieh Shen)
 ;;
 ;;;; Changes since v1.2:
 ;;
@@ -54,6 +62,9 @@
   '((t (:inverse-video t)))
   "Face for occurrences of current region.")
 
+(defcustom region-occurrences-highlighter-all-visible-buffers t
+  "If non nil, region is highlighted in buffers of all visible windows."
+  :type 'boolean)
 
 (defcustom region-occurrences-highlighter-max-size 300
   "Maximum length of region of which highlight occurrences."
@@ -87,7 +98,7 @@
 
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
-  "Highlight the current region and its occurrences, a la Visual Code"
+  "Highlight the current region and its occurrences, a la Visual Code."
   :group region-occurrences-highlighter-group
 
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
@@ -108,6 +119,11 @@
 
   ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
   (when region-occurrences-highlighter--previous-region
+
+    (region-occurrences-highlighter--update-other-windows
+     region-occurrences-highlighter--previous-region
+     nil)
+    
     (unhighlight-regexp region-occurrences-highlighter--previous-region)
     (setq region-occurrences-highlighter--previous-region nil)
     (region-occurrences-highlighter-nav-mode -1))
@@ -121,9 +137,39 @@
             (end (region-end)))
         (when (region-occurrences-highlighter--accept begin end)
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
+
+            (region-occurrences-highlighter--update-other-windows
+             region-occurrences-highlighter--previous-region
+             str)
+            
             (setq region-occurrences-highlighter--previous-region str)
             (highlight-regexp str 'region-occurrences-highlighter-face)
             (region-occurrences-highlighter-nav-mode 1)))))))
+
+(defun region-occurrences-highlighter--visible-buffers ()
+  "Return a list of all visible buffers in all frames without changing the selected frame or window."
+  (let ((buffers nil)
+        (current-frame (selected-frame)))
+    (dolist (frame (frame-list))
+      (with-selected-frame frame
+        (walk-windows (lambda (window)
+                        (let ((buffer (window-buffer window)))
+                          (when (not (member buffer buffers))
+                            (push buffer buffers)))))))
+    (select-frame current-frame)
+    buffers))
+
+(defun region-occurrences-highlighter--update-other-windows(previous-region current-region)
+  "Update the highlightings in all buffers but the current buffer."
+  (when region-occurrences-highlighter-all-visible-buffers
+    (let ((this-buffer (current-buffer)))
+      (dolist (buffer (region-occurrences-highlighter--visible-buffers))
+        (unless (eq this-buffer buffer)
+          (with-current-buffer buffer
+            (when previous-region
+              (unhighlight-regexp previous-region))
+            (when current-region
+              (highlight-regexp current-region 'region-occurrences-highlighter-face))))))))
 
 (defvar region-occurrences-highlighter-nav-mode-map
   (make-sparse-keymap)
