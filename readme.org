@@ -42,7 +42,7 @@ In order to add keyboard navigation between highlighted regions, bind your prefe
 The =region-occurrences-highlighter-nav-mode-map= map is only active when regions are highlighted, so the keys can have other bindings when no region highlights exist (thanks to [[https://github.com/xendk][Thomas Fini Hansen]]).
 
 * Customization
-These following are available in customize:
+The following options are available in customize:
 - =region-occurrences-highlighter-all-visible-buffers=: In non nil, occurrences are highlighted in the buffers of all visible windows and frames. Defaults to =t=.
 - =region-occurrences-highlighter-face=: Face used to highlight the occurrences. Defaults to inverse text.
 - =region-occurrences-highlighter-min-size=: Minimum region length to highlight occurrences. Defaults to =3=.
