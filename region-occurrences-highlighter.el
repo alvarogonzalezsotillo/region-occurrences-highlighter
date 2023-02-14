@@ -51,7 +51,7 @@
 (require 'hi-lock)
 
 (defvar region-occurrences-highlighter--previous-region nil)
-(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
+;;(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
 
 (defgroup region-occurrences-highlighter-group nil
   "Region occurrences highlighter."
@@ -61,6 +61,10 @@
 (defface region-occurrences-highlighter-face
   '((t (:inverse-video t)))
   "Face for occurrences of current region.")
+
+(defcustom region-occurrences-highlighter-max-buffer-size 999999
+  "If the buffer size is bigger, don't perform highlight due to performance reasons."
+  :type 'integer)
 
 (defcustom region-occurrences-highlighter-all-visible-buffers t
   "If non nil, region is highlighted in buffers of all visible windows."
@@ -120,11 +124,10 @@
   ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
   (when region-occurrences-highlighter--previous-region
 
-    (region-occurrences-highlighter--update-other-windows
+    (region-occurrences-highlighter--update-buffers
      region-occurrences-highlighter--previous-region
      nil)
     
-    (unhighlight-regexp region-occurrences-highlighter--previous-region)
     (setq region-occurrences-highlighter--previous-region nil)
     (region-occurrences-highlighter-nav-mode -1))
 
@@ -138,38 +141,39 @@
         (when (region-occurrences-highlighter--accept begin end)
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
 
-            (region-occurrences-highlighter--update-other-windows
+            (region-occurrences-highlighter--update-buffers
              region-occurrences-highlighter--previous-region
              str)
             
             (setq region-occurrences-highlighter--previous-region str)
-            (highlight-regexp str 'region-occurrences-highlighter-face)
             (region-occurrences-highlighter-nav-mode 1)))))))
 
-(defun region-occurrences-highlighter--visible-buffers ()
-  "Return a list of all visible buffers in all frames without changing the selected frame or window."
-  (let ((buffers nil)
-        (current-frame (selected-frame)))
-    (dolist (frame (frame-list))
-      (with-selected-frame frame
-        (walk-windows (lambda (window)
-                        (let ((buffer (window-buffer window)))
-                          (when (not (member buffer buffers))
-                            (push buffer buffers)))))))
-    (select-frame current-frame)
-    buffers))
+(defun region-occurrences-highlighter--buffers-to-highlight ()
+  "Return a list of the buffers where the highlighting will be performed, honoring `region-occurrences-highlighter-all-visible-buffers'."
+  (if region-occurrences-highlighter-all-visible-buffers
+      (let ((buffers nil)
+            (current-frame (selected-frame)))
+        (dolist (frame (frame-list))
+          (with-selected-frame frame
+            (walk-windows (lambda (window)
+                            (let ((buffer (window-buffer window)))
+                              (when (not (member buffer buffers))
+                                (push buffer buffers)))))))
+        (select-frame current-frame)
+        buffers)
+    (list (current-buffer))))
 
-(defun region-occurrences-highlighter--update-other-windows(previous-region current-region)
+
+(defun region-occurrences-highlighter--update-buffers(previous-region current-region)
   "Update the highlightings in all buffers but the current buffer."
-  (when region-occurrences-highlighter-all-visible-buffers
-    (let ((this-buffer (current-buffer)))
-      (dolist (buffer (region-occurrences-highlighter--visible-buffers))
-        (unless (eq this-buffer buffer)
-          (with-current-buffer buffer
-            (when previous-region
-              (unhighlight-regexp previous-region))
-            (when current-region
-              (highlight-regexp current-region 'region-occurrences-highlighter-face))))))))
+  (dolist (buffer (region-occurrences-highlighter--buffers-to-highlight))
+    (with-current-buffer buffer
+      (when previous-region
+        (unhighlight-regexp previous-region))
+      (when current-region
+        (if (< (buffer-size) region-occurrences-highlighter-max-buffer-size)
+            (highlight-regexp current-region 'region-occurrences-highlighter-face)
+          (warn "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer))))))
 
 (defvar region-occurrences-highlighter-nav-mode-map
   (make-sparse-keymap)
