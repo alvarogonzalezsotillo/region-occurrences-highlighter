@@ -27,7 +27,7 @@
 ;;
 ;;;; Changes since v1.4:
 ;;
-;; - Added `region-occurrences-highlighter-all-visible-buffers'
+;; - Added `region-occurrences-highlighter-all-visible-buffers' and `region-occurrences-highlighter-case-fold-search'
 ;;
 ;;;; Changes since v1.3:
 ;;
@@ -62,8 +62,12 @@
   '((t (:inverse-video t)))
   "Face for occurrences of current region.")
 
+(defcustom region-occurrences-highlighter-case-fold-search t
+  "Non-nil means highlightings will ignore case (see `case-fold-search')"
+  :type 'boolean)
+
 (defcustom region-occurrences-highlighter-max-buffer-size 999999
-  "If the buffer size is bigger, don't perform highlight due to performance reasons."
+  "If the buffer size is bigger, don't perform highlighting due to performance reasons."
   :type 'integer)
 
 (defcustom region-occurrences-highlighter-all-visible-buffers t
@@ -163,17 +167,20 @@
         buffers)
     (list (current-buffer))))
 
-
 (defun region-occurrences-highlighter--update-buffers(previous-region current-region)
   "Update the highlightings in all buffers but the current buffer."
-  (dolist (buffer (region-occurrences-highlighter--buffers-to-highlight))
-    (with-current-buffer buffer
-      (when previous-region
-        (unhighlight-regexp previous-region))
-      (when current-region
-        (if (< (buffer-size) region-occurrences-highlighter-max-buffer-size)
-            (highlight-regexp current-region 'region-occurrences-highlighter-face)
-          (warn "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer))))))
+  (let* (
+         (case-fold-search region-occurrences-highlighter-case-fold-search)
+         (previous (if (and  previous-region case-fold-search) (downcase previous-region) previous-region))
+         (current (if (and current-region case-fold-search) (downcase current-region) current-region)))
+    (dolist (buffer (region-occurrences-highlighter--buffers-to-highlight))
+      (with-current-buffer buffer
+        (when previous
+          (unhighlight-regexp previous))
+        (when current
+          (if (< (buffer-size) region-occurrences-highlighter-max-buffer-size)
+              (highlight-regexp current 'region-occurrences-highlighter-face)
+            (warn "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer)))))))
 
 (defvar region-occurrences-highlighter-nav-mode-map
   (make-sparse-keymap)
