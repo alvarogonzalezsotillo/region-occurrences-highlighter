@@ -63,7 +63,7 @@
   "Face for occurrences of current region.")
 
 (defcustom region-occurrences-highlighter-case-fold-search t
-  "Non-nil means highlightings will ignore case (see `case-fold-search')"
+  "Non-nil means highlightings will ignore case (see `case-fold-search')."
   :type 'boolean)
 
 (defcustom region-occurrences-highlighter-max-buffer-size 999999
@@ -196,6 +196,8 @@
   (interactive)
   (region-occurrences-highlighter-jump 1))
 
+
+
 (defun region-occurrences-highlighter-prev ()
   "Jump to the previous highlighted region."
   (interactive)
@@ -209,7 +211,7 @@ DIR has to be 1 or -1."
       ;; versa, we need to exchange point and mark in order to not hit
       ;; the current region when searching.
       (let ((swap (if (< (point) (mark)) (eq dir 1) (eq dir -1)))
-            (case-fold-search nil))
+            (case-fold-search region-occurrences-highlighter-case-fold-search))
         (when swap
           (exchange-point-and-mark))
         (if (re-search-forward region-occurrences-highlighter--previous-region nil t dir)
