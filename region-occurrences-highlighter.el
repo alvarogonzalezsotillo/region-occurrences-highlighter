@@ -194,16 +194,22 @@
 (defun region-occurrences-highlighter-next ()
   "Jump to the next highlighted region."
   (interactive)
-  (region-occurrences-highlighter-jump 1))
+  (region-occurrences-highlighter--jump 1))
 
 
 
 (defun region-occurrences-highlighter-prev ()
   "Jump to the previous highlighted region."
   (interactive)
-  (region-occurrences-highlighter-jump -1))
+  (region-occurrences-highlighter--jump -1))
 
 (defun region-occurrences-highlighter-jump (dir)
+  "The function `region-occurrences-highlighter-jump' was not private (--) in previous version."
+  (region-occurrences-highlighter--jump dir))
+
+(make-obsolete 'region-occurrences-highlighter-jump 'region-occurrences-highlighter--jump "Version 1.5")
+
+(defun region-occurrences-highlighter--jump (dir)
   "Jump to the next or previous highlighted region.
 DIR has to be 1 or -1."
   (if region-occurrences-highlighter--previous-region
