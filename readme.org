@@ -48,6 +48,7 @@ The following options are available in customize:
 - =region-occurrences-highlighter-min-size=: Minimum region length to highlight occurrences. Defaults to =3=.
 - =region-occurrences-highlighter-max-size=: Maximum region length to highlight occurrences. Defaults to =300=.
 - =region-occurrences-highlighter-ignore-regex=: If defined, selections matching this regex will be ignored. Defaults to ~[[:space:]\n]+~
+- =region-occurences-highlighter-case-fold-search=: Non-nil means highlightings will ignore case (see `case-fold-search').
 
 * Possible improvements
 - A =post-command-hook= is used in order to detect all region changes, including mouse selections. This can lead to performance problems. Another option could be to hook point and mark changes.
