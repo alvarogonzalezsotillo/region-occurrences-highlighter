@@ -131,7 +131,7 @@
     (region-occurrences-highlighter--update-buffers
      region-occurrences-highlighter--previous-region
      nil)
-    
+
     (setq region-occurrences-highlighter--previous-region nil)
     (region-occurrences-highlighter-nav-mode -1))
 
@@ -148,7 +148,7 @@
             (region-occurrences-highlighter--update-buffers
              region-occurrences-highlighter--previous-region
              str)
-            
+
             (setq region-occurrences-highlighter--previous-region str)
             (region-occurrences-highlighter-nav-mode 1)))))))
 
@@ -165,7 +165,9 @@
                                 (push buffer buffers)))))))
         (select-frame current-frame)
         buffers)
-    (list (current-buffer))))
+    (list (with-selected-window (or (minibuffer-selected-window)
+                                    (selected-window))
+            (current-buffer)))))
 
 (defun region-occurrences-highlighter--update-buffers(previous-region current-region)
   "Update the highlightings in all buffers but the current buffer."
