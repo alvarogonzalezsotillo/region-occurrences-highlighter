@@ -56,5 +56,6 @@ The following options are available in customize:
 
 
 * Similar solutions
+- [[https://github.com/balloneij/selection-highlight-mode][balloneij/selection-highlight-mode]]
 - [[https://github.com/YoungFrog/highlight-region/blob/master/highlight-region.el][YoungFrog/highlight-region]]
 - Question in [[https://emacs.stackexchange.com/questions/22041/highlight-text-equivalent-to-the-marked-region-and-search-and-replace-on-the-fly][StackExchange]]
