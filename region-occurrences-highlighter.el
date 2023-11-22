@@ -3,7 +3,7 @@
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
-;; Version: 1.5
+;; Version: 1.6
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -24,6 +24,12 @@
 
 
 ;;; News:
+;;
+;;;; Changes since v1.5
+;;
+;; - Don't highlight if `rectangle-mark-mode' is active
+;; - `messsage' instead of `warn' when the buffer is too big
+;; - Default highlight face is `region' instead of `inverse-video' (inspired by https://github.com/balloneij/selection-highlight-mode)
 ;;
 ;;;; Changes since v1.4:
 ;;
@@ -49,6 +55,7 @@
 ;;; Code:
 
 (require 'hi-lock)
+(require 'rect)
 
 (defvar region-occurrences-highlighter--previous-region nil)
 ;;(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
@@ -59,7 +66,7 @@
 
 
 (defface region-occurrences-highlighter-face
-  '((t (:inverse-video t)))
+  '((t :inherit region))
   "Face for occurrences of current region.")
 
 (defcustom region-occurrences-highlighter-case-fold-search t
@@ -102,7 +109,11 @@
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
    (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
    (let ((str (buffer-substring-no-properties begin end)))
-     (not (region-occurrences-highlighter--ignore str)))))
+     (and
+      (not
+       (and rectangle-mark-mode
+            (string-match-p ".*\n.*" str)))
+      (not (region-occurrences-highlighter--ignore str))))))
 
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
@@ -114,7 +125,7 @@
     (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)))
 
 (defun region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode ()
-  "Turn on the 'region-occurrences-highlighter-mode'."
+  "Turn on the `region-occurrences-highlighter-mode'."
   (region-occurrences-highlighter-mode 1))
 
 ;;;###autoload
@@ -170,7 +181,8 @@
             (current-buffer)))))
 
 (defun region-occurrences-highlighter--update-buffers(previous-region current-region)
-  "Update the highlightings in all buffers but the current buffer."
+  "Update the highlightings in all buffers but the current buffer.
+The string PREVIOUS-REGION is unhighlighted and CURRENT-REGION is highlighted."
   (let* (
          (case-fold-search region-occurrences-highlighter-case-fold-search)
          (previous (if (and  previous-region case-fold-search) (downcase previous-region) previous-region))
@@ -182,7 +194,7 @@
         (when current
           (if (< (buffer-size) region-occurrences-highlighter-max-buffer-size)
               (highlight-regexp current 'region-occurrences-highlighter-face)
-            (warn "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer)))))))
+            (message "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer)))))))
 
 (defvar region-occurrences-highlighter-nav-mode-map
   (make-sparse-keymap)
