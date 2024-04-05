@@ -58,7 +58,7 @@
 (require 'rect)
 
 (defvar region-occurrences-highlighter--previous-region nil)
-;;(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
+(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
 
 (defgroup region-occurrences-highlighter-group nil
   "Region occurrences highlighter."
