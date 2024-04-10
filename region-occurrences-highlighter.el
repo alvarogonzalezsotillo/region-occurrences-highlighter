@@ -1,4 +1,4 @@
-;;; region-occurrences-highlighter.el --- Mark occurrences of current region (selection).  -*- lexical-binding: t; -*-
+;;; region-occurrences-highlighter.el --- Mark occurrences of current region (selection)  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
@@ -20,8 +20,6 @@
 ;; Enable region-occurrences-highlighter-mode, via alt-X or using hooks
 ;;
 ;; More information at https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
-
-
 
 ;;; News:
 ;;
@@ -50,20 +48,17 @@
 ;;;; Changes since v1.0:
 ;; - Bug fixes
 
-
-
 ;;; Code:
 
 (require 'hi-lock)
 (require 'rect)
 
-(defvar region-occurrences-highlighter--previous-region nil)
-(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
-
 (defgroup region-occurrences-highlighter-group nil
   "Region occurrences highlighter."
   :group 'convenience)
 
+(defvar region-occurrences-highlighter--previous-region nil)
+(make-variable-buffer-local 'region-occurrences-highlighter--previous-region)
 
 (defface region-occurrences-highlighter-face
   '((t :inherit region))
@@ -74,7 +69,8 @@
   :type 'boolean)
 
 (defcustom region-occurrences-highlighter-max-buffer-size 999999
-  "If the buffer size is bigger, don't perform highlighting due to performance reasons."
+  "If the buffer size is bigger, don't perform highlighting due to
+performance reasons."
   :type 'integer)
 
 (defcustom region-occurrences-highlighter-all-visible-buffers t
@@ -90,7 +86,8 @@
   :type 'integer)
 
 (defcustom region-occurrences-highlighter-ignore-regex "[[:space:]\n]+"
-  "Ignore selection if matches this regex.  Set it to empty string to maintain compatibility with previous versions."
+  "Ignore selection if matches this regex.  Set it to empty string to maintain
+compatibility with previous versions."
   :type 'string)
 
 (defun region-occurrences-highlighter--ignore(str)
@@ -101,9 +98,9 @@
     ""
     (replace-regexp-in-string region-occurrences-highlighter-ignore-regex "" str))))
 
-
 (defun region-occurrences-highlighter--accept (begin end)
-  "Accept to highlight occurrences if BEGIN and END are between limits, and the selection doesn't match ignore regex."
+  "Accept to highlight occurrences if BEGIN and END are between limits, and the
+selection doesn't match ignore regex."
   (and
    (not (eq begin end))
    (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
@@ -130,7 +127,8 @@
 
 ;;;###autoload
 (define-globalized-minor-mode global-region-occurrences-highlighter-mode
-  region-occurrences-highlighter-mode region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode
+  region-occurrences-highlighter-mode
+  region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode
   :require 'region-occurrences-highlighter)
 
 (defun region-occurrences-highlighter--change-hook ()
@@ -164,7 +162,8 @@
             (region-occurrences-highlighter-nav-mode 1)))))))
 
 (defun region-occurrences-highlighter--buffers-to-highlight ()
-  "Return a list of the buffers where the highlighting will be performed, honoring `region-occurrences-highlighter-all-visible-buffers'."
+  "Return a list of the buffers where the highlighting will be performed,
+honoring `region-occurrences-highlighter-all-visible-buffers'."
   (if region-occurrences-highlighter-all-visible-buffers
       (let ((buffers nil)
             (current-frame (selected-frame)))
@@ -218,7 +217,8 @@ The string PREVIOUS-REGION is unhighlighted and CURRENT-REGION is highlighted."
   (region-occurrences-highlighter--jump -1))
 
 (defun region-occurrences-highlighter-jump (dir)
-  "The function `region-occurrences-highlighter-jump' was not private (--) in previous version."
+  "The function `region-occurrences-highlighter-jump' was not private (--)
+in previous version."
   (region-occurrences-highlighter--jump dir))
 
 (make-obsolete 'region-occurrences-highlighter-jump 'region-occurrences-highlighter--jump "Version 1.5")
