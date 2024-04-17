@@ -1,6 +1,7 @@
 ;;; region-occurrences-highlighter.el --- Mark occurrences of current region (selection)  -*- lexical-binding: t; -*-
 
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
+;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "24"))
 ;; Version: 1.6
