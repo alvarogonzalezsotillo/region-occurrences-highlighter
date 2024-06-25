@@ -102,16 +102,15 @@ compatibility with previous versions."
 (defun region-occurrences-highlighter--accept (begin end)
   "Accept to highlight occurrences if BEGIN and END are between limits, and the
 selection doesn't match ignore regex."
-  (and
-   (not (eq begin end))
-   (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
-   (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
-   (let ((str (buffer-substring-no-properties begin end)))
-     (and
-      (not
-       (and rectangle-mark-mode
-            (string-match-p ".*\n.*" str)))
-      (not (region-occurrences-highlighter--ignore str))))))
+  (and (not (eq begin end))
+       (>= (abs (- begin end)) region-occurrences-highlighter-min-size)
+       (<= (abs (- begin end)) region-occurrences-highlighter-max-size)
+       (let ((str (buffer-substring-no-properties begin end)))
+         (and
+          (not
+           (and rectangle-mark-mode
+                (string-match-p ".*\n.*" str)))
+          (not (region-occurrences-highlighter--ignore str))))))
 
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
@@ -139,8 +138,7 @@ selection doesn't match ignore regex."
   (when region-occurrences-highlighter--previous-region
 
     (region-occurrences-highlighter--update-buffers
-     region-occurrences-highlighter--previous-region
-     nil)
+     region-occurrences-highlighter--previous-region nil)
 
     (setq region-occurrences-highlighter--previous-region nil)
     (region-occurrences-highlighter-nav-mode -1))
@@ -148,10 +146,10 @@ selection doesn't match ignore regex."
   (when region-occurrences-highlighter-mode
 
     ;;; HIGHLIGHT THE CURRENT REGION
-    (when (and (region-active-p)
+    (when (and (use-region-p)
                (not deactivate-mark))
       (let ((begin (region-beginning))
-            (end (region-end)))
+            (end   (region-end)))
         (when (region-occurrences-highlighter--accept begin end)
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
 
