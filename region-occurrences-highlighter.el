@@ -93,11 +93,10 @@ compatibility with previous versions."
 
 (defun region-occurrences-highlighter--ignore(str)
   "Check if STR matches the ignore regex."
-  (or
-   (not region-occurrences-highlighter-ignore-regex)
-   (string=
-    ""
-    (replace-regexp-in-string region-occurrences-highlighter-ignore-regex "" str))))
+  (or (not region-occurrences-highlighter-ignore-regex)
+      (string=
+       ""
+       (replace-regexp-in-string region-occurrences-highlighter-ignore-regex "" str))))
 
 (defun region-occurrences-highlighter--accept (begin end)
   "Accept to highlight occurrences if BEGIN and END are between limits, and the
@@ -154,8 +153,7 @@ selection doesn't match ignore regex."
           (let ((str (regexp-quote (buffer-substring-no-properties begin end))))
 
             (region-occurrences-highlighter--update-buffers
-             region-occurrences-highlighter--previous-region
-             str)
+             region-occurrences-highlighter--previous-region str)
 
             (setq region-occurrences-highlighter--previous-region str)
             (region-occurrences-highlighter-nav-mode 1)))))))
@@ -208,8 +206,6 @@ The string PREVIOUS-REGION is unhighlighted and CURRENT-REGION is highlighted."
   (interactive)
   (region-occurrences-highlighter--jump 1))
 
-
-
 (defun region-occurrences-highlighter-prev ()
   "Jump to the previous highlighted region."
   (interactive)
@@ -225,28 +221,29 @@ in previous version."
 (defun region-occurrences-highlighter--jump (dir)
   "Jump to the next or previous highlighted region.
 DIR has to be 1 or -1."
-  (if region-occurrences-highlighter--previous-region
-      ;; If the point is before the mark when going forward or vice
-      ;; versa, we need to exchange point and mark in order to not hit
-      ;; the current region when searching.
-      (let ((swap (if (< (point) (mark)) (eq dir 1) (eq dir -1)))
-            (case-fold-search region-occurrences-highlighter-case-fold-search))
-        (when swap
-          (exchange-point-and-mark))
-        (if (re-search-forward region-occurrences-highlighter--previous-region nil t dir)
-            (progn
-              (set-mark (point))
-              (re-search-backward region-occurrences-highlighter--previous-region nil t dir)
-              ;; Make sure that point and mark is in the same order as the
-              ;; original selection.
-              (when (not swap)
-                (exchange-point-and-mark))
-              (activate-mark))
-          (message "No more highlights")
-          ;; Undo the swap.
-          (when swap
-            (exchange-point-and-mark))))
-    (error "No region highlighted")))
+  (cond
+   (region-occurrences-highlighter--previous-region
+    ;; If the point is before the mark when going forward or vice
+    ;; versa, we need to exchange point and mark in order to not hit
+    ;; the current region when searching.
+    (let ((swap (if (< (point) (mark)) (eq dir 1) (eq dir -1)))
+          (case-fold-search region-occurrences-highlighter-case-fold-search))
+      (when swap
+        (exchange-point-and-mark))
+      (cond ((re-search-forward region-occurrences-highlighter--previous-region nil t dir)
+             (set-mark (point))
+             (re-search-backward region-occurrences-highlighter--previous-region nil t dir)
+             ;; Make sure that point and mark is in the same order as the
+             ;; original selection.
+             (when (not swap)
+               (exchange-point-and-mark))
+             (activate-mark))
+            (t
+             (message "No more highlights")
+             ;; Undo the swap.
+             (when swap
+               (exchange-point-and-mark))))))
+   (t (error "No region highlighted"))))
 
 (provide 'region-occurrences-highlighter)
 ;;; region-occurrences-highlighter.el ends here
