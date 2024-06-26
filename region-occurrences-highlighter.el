@@ -3,7 +3,7 @@
 ;; Author: Álvaro González Sotillo <alvarogonzalezsotillo@gmail.com>
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
-;; Package-Requires: ((emacs "24"))
+;; Package-Requires: ((emacs "26.1"))
 ;; Version: 1.6
 ;; Keywords: convenience
 
@@ -111,14 +111,23 @@ selection doesn't match ignore regex."
                 (string-match-p ".*\n.*" str)))
           (not (region-occurrences-highlighter--ignore str))))))
 
+(defun region-occurrences-highlighter--enable ()
+  "Enable `region-occurrences-highlighter'."
+  (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook nil t)
+  (add-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight nil t))
+
+(defun region-occurrences-highlighter--disable ()
+  "Disable `region-occurrences-highlighter'."
+  (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
+  (remove-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight t))
+
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
   "Highlight the current region and its occurrences, a la Visual Code."
   :group region-occurrences-highlighter-group
-
-  (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
-  (when region-occurrences-highlighter-mode
-    (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)))
+  (if region-occurrences-highlighter-mode
+      (region-occurrences-highlighter--enable)
+    (region-occurrences-highlighter--disable)))
 
 (defun region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode ()
   "Turn on the `region-occurrences-highlighter-mode'."
@@ -176,13 +185,16 @@ honoring `region-occurrences-highlighter-all-visible-buffers'."
                                     (selected-window))
             (current-buffer)))))
 
-(defun region-occurrences-highlighter--update-buffers(previous-region current-region)
+(defun region-occurrences-highlighter--update-buffers (previous-region current-region)
   "Update the highlightings in all buffers but the current buffer.
 The string PREVIOUS-REGION is unhighlighted and CURRENT-REGION is highlighted."
-  (let* (
-         (case-fold-search region-occurrences-highlighter-case-fold-search)
-         (previous (if (and  previous-region case-fold-search) (downcase previous-region) previous-region))
-         (current (if (and current-region case-fold-search) (downcase current-region) current-region)))
+  (let* ((case-fold-search region-occurrences-highlighter-case-fold-search)
+         (previous (if (and  previous-region case-fold-search)
+                       (downcase previous-region)
+                     previous-region))
+         (current (if (and current-region case-fold-search)
+                      (downcase current-region)
+                    current-region)))
     (dolist (buffer (region-occurrences-highlighter--buffers-to-highlight))
       (with-current-buffer buffer
         (when previous
@@ -191,6 +203,15 @@ The string PREVIOUS-REGION is unhighlighted and CURRENT-REGION is highlighted."
           (if (< (buffer-size) region-occurrences-highlighter-max-buffer-size)
               (highlight-regexp current 'region-occurrences-highlighter-face)
             (message "Buffer too big for region-occurrences-highlighter: %s (see region-occurrences-highlighter-max-buffer-size)" buffer)))))))
+
+(defun region-occurrences-highlighter--unhighlight (&rest _)
+  "Unhighlight it."
+  (when-let* ((previous-region region-occurrences-highlighter--previous-region)
+              (case-fold-search region-occurrences-highlighter-case-fold-search)
+              (previous (if (and previous-region case-fold-search)
+                            (downcase previous-region)
+                          previous-region)))
+    (unhighlight-regexp previous)))
 
 (defvar region-occurrences-highlighter-nav-mode-map
   (make-sparse-keymap)
