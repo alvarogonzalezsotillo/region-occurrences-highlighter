@@ -113,13 +113,20 @@ selection doesn't match ignore regex."
 
 (defun region-occurrences-highlighter--enable ()
   "Enable `region-occurrences-highlighter'."
+  (add-hook 'kill-buffer-hook #'region-occurrences-highlighter--kill-buffer-hook)
   (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook nil t)
   (add-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight nil t))
 
 (defun region-occurrences-highlighter--disable ()
   "Disable `region-occurrences-highlighter'."
+  (remove-hook 'kill-buffer-hook #'region-occurrences-highlighter--kill-buffer-hook)
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (remove-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight t))
+
+(defun region-occurrences-highlighter--kill-buffer-hook()
+  "Deactivate the mark before killing the buffer."
+  (deactivate-mark)
+  (region-occurrences-highlighter--change-hook))
 
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
