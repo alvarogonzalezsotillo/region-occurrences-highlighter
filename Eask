@@ -1,5 +1,5 @@
 (package "region-occurrences-highlighter"
-         "1.6"
+         "1.6.2"
          "Mark occurrences of current region (selection)")
 
 (website-url "https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter")
