@@ -119,7 +119,7 @@ selection doesn't match ignore regex."
 
 (defun region-occurrences-highlighter--disable ()
   "Disable `region-occurrences-highlighter'."
-  (remove-hook 'pre-command-hook #'region-occurrences-highlighter--cleanup-hook nil t)
+  (remove-hook 'pre-command-hook #'region-occurrences-highlighter--cleanup-hook t)
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (remove-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight t))
 
