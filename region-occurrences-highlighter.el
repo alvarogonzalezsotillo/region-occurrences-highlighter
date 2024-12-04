@@ -4,7 +4,7 @@
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter
 ;; Package-Requires: ((emacs "26.1"))
-;; Version: 1.6
+;; Version: 1.6.2
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
