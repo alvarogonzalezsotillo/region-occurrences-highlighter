@@ -91,7 +91,7 @@ performance reasons."
 compatibility with previous versions."
   :type 'string)
 
-(defun region-occurrences-highlighter--ignore(str)
+(defun region-occurrences-highlighter--ignore (str)
   "Check if STR matches the ignore regex."
   (or (not region-occurrences-highlighter-ignore-regex)
       (string=
@@ -113,20 +113,15 @@ selection doesn't match ignore regex."
 
 (defun region-occurrences-highlighter--enable ()
   "Enable `region-occurrences-highlighter'."
-  (add-hook 'kill-buffer-hook #'region-occurrences-highlighter--kill-buffer-hook)
+  (add-hook 'pre-command-hook #'region-occurrences-highlighter--cleanup-hook nil t)
   (add-hook 'post-command-hook #'region-occurrences-highlighter--change-hook nil t)
   (add-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight nil t))
 
 (defun region-occurrences-highlighter--disable ()
   "Disable `region-occurrences-highlighter'."
-  (remove-hook 'kill-buffer-hook #'region-occurrences-highlighter--kill-buffer-hook)
+  (remove-hook 'pre-command-hook #'region-occurrences-highlighter--cleanup-hook t)
   (remove-hook 'post-command-hook #'region-occurrences-highlighter--change-hook t)
   (remove-hook 'before-revert-hook #'region-occurrences-highlighter--unhighlight t))
-
-(defun region-occurrences-highlighter--kill-buffer-hook()
-  "Deactivate the mark before killing the buffer."
-  (deactivate-mark)
-  (region-occurrences-highlighter--change-hook))
 
 ;;;###autoload
 (define-minor-mode region-occurrences-highlighter-mode
@@ -146,9 +141,8 @@ selection doesn't match ignore regex."
   region-occurrences-highlighter--turn-on-region-occurrences-highlighter-mode
   :require 'region-occurrences-highlighter)
 
-(defun region-occurrences-highlighter--change-hook ()
-  "Called each time the region is changed."
-
+(defun region-occurrences-highlighter--cleanup-hook ()
+  "Called before region is changed."
   ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
   (when region-occurrences-highlighter--previous-region
 
@@ -156,8 +150,10 @@ selection doesn't match ignore regex."
      region-occurrences-highlighter--previous-region nil)
 
     (setq region-occurrences-highlighter--previous-region nil)
-    (region-occurrences-highlighter-nav-mode -1))
+    (region-occurrences-highlighter-nav-mode -1)))
 
+(defun region-occurrences-highlighter--change-hook ()
+  "Called each time the region is changed."
   (when region-occurrences-highlighter-mode
 
     ;;; HIGHLIGHT THE CURRENT REGION
