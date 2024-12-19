@@ -143,14 +143,16 @@ selection doesn't match ignore regex."
 
 (defun region-occurrences-highlighter--cleanup-hook ()
   "Called before region is changed."
+  (unless (memq this-command '(region-occurrences-highlighter-prev
+                               region-occurrences-highlighter-next))
   ;;; REMOVE PREVIOUS HIGHLIGHTED REGION
-  (when region-occurrences-highlighter--previous-region
+    (when region-occurrences-highlighter--previous-region
 
-    (region-occurrences-highlighter--update-buffers
-     region-occurrences-highlighter--previous-region nil)
+      (region-occurrences-highlighter--update-buffers
+       region-occurrences-highlighter--previous-region nil)
 
-    (setq region-occurrences-highlighter--previous-region nil)
-    (region-occurrences-highlighter-nav-mode -1)))
+      (setq region-occurrences-highlighter--previous-region nil)
+      (region-occurrences-highlighter-nav-mode -1))))
 
 (defun region-occurrences-highlighter--change-hook ()
   "Called each time the region is changed."
