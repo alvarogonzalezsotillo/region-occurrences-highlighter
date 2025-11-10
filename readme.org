@@ -1,5 +1,6 @@
 [[https://jcs-emacs.github.io/jcs-elpa/#/region-occurrences-highlighter][file:https://raw.githubusercontent.com/jcs-emacs/badges/master/elpa/v/region-occurrences-highlighter.svg]]
 [[https://melpa.org/#/region-occurrences-highlighter][file:https://melpa.org/packages/region-occurrences-highlighter-badge.svg]]
+[[https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter/actions/workflows/test.ym][https://github.com/alvarogonzalezsotillo/region-occurrences-highlighter/actions/workflows/test.yml/badge.svg]]
 
 This emacs package implements a local minor mode that highlights occurrences of the current selected region. It uses the built-it =highlight-regexp= function.
 
